@@ -85,7 +85,9 @@ ZYNQ的启动分为三步：
 
 #### 首先新建个工程
 
-一直next到选择芯片。选`xc7z010clg400-1`
+一直next到选择芯片。
+
+选`xc7z010clg400-1`
 
 ![vivado1](../mate/vivado1.jpeg)
 
@@ -95,11 +97,15 @@ ZYNQ的启动分为三步：
 
 #### Create Board Design
 
+![create_block_design](../mate/create_block_design.png)
+
 点加号添加`ZYNQ7 Processing System`:
 
 ![vivado3](../mate/vivado3.jpeg)
 
-双击出来的zynq7 processing system蓝框框，配置PS系统：
+双击出来的`zynq7 processing system`蓝框框，配置PS系统：
+
+或在`zynq7 processing system`上右键选择 `customize IP`;
 
 * 添加nand控制器，默认就行了：
 
@@ -107,7 +113,7 @@ ZYNQ的启动分为三步：
 
 * 添加MIO设置。勾上ENET0、SD0、UART1。注意引脚配置：
 
-  ![vivado5](../mate/vivado5.jpeg)
+  ![vivado5](../mate/vivado5.png)
 
 * 设置外设时钟。把网口改成百兆的：
 
@@ -123,7 +129,13 @@ ZYNQ的启动分为三步：
 
 ![vivado8](../mate/vivado8.jpeg)
 
-将GMII的TX、RX引到各自的concat模块处，将GMII其他引脚以及MDIO引出：右键点击`Make External`
+将GMII的TX、RX引到各自的concat模块处，concat模块需要调整为配套的[3：0]宽度；
+
+![concat_customize](../mate/concat_customize.png)
+
+将GMII其他引脚以及MDIO手动引出；
+
+最后右键点击`Make External`，将所有信号自动引出，手动删除不需要的信号；
 
 ![vivado10](../mate/vivado10.jpeg)
 
@@ -133,19 +145,21 @@ ZYNQ的启动分为三步：
 
 完成后的效果：
 
-![vivado11](../mate/vivado11.jpeg)
+![helloworld_block_design](../mate/helloworld_block_design.png)
 
 #### Generate Block Design(左边栏)
 
 先`Generate Block Design`，然后右键`Source`框下面的bd文件，`Create HDL Wrapper`：
 
-![vivado12](../mate/vivado12.jpeg)
-
-
+![Create_HDL_Wrapper](../mate/Create_HDL_Wrapper.png)
 
 #### Run Synthesis(左边栏)
 
 先综合一次，然后打开`Open Synthesized Design`->`Constraint Wizard`，分配引脚。这时需要新建一个constraint文件。
+
+点击`Layout` ->`I/O Planning`打开GPIO控制板，点击下方`I/OPorts`调节管脚设置及分配物理管脚；
+
+![GPIO_Layout](../mate/GPIO_Layout.png)
 
 将网口的引脚都设置为`LVCMOS33`电平，然后逐个分配引脚。。。
 
@@ -192,7 +206,7 @@ set_property PACKAGE_PIN Y17 [get_ports {enet0_gmii_rxd[3]}]
 
 #### 首先需要新建FSBL。
 
-`File`->`New`->`Application Project`，Next到`Templates`，选`Zynq FSBL`：
+`File`->`New`->`Application Project`，Next到`Templates`，选`Zynq FSBL`，输入项目名：ebaz4205_helloworld
 
 ![sdk1](../mate/sdk1.jpeg)
 
@@ -201,6 +215,8 @@ set_property PACKAGE_PIN Y17 [get_ports {enet0_gmii_rxd[3]}]
 #### 然后才新建helloworld。。
 
 `File`->`New`->`Application Project`，Next到`Templates`，选`Hello World`。它也会自动开始编译，不出意外的话就完事了。
+
+![sdk4](../mate/sdk4.png)
 
 #### 最后生成启动文件BOOT.bin
 
